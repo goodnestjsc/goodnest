@@ -80,4 +80,20 @@ stayCardStyle.textContent=`
 document.head.appendChild(stayCardStyle);
 if(typeof propertyPhotos!=='undefined') propertyPhotos[2]='assets/homes/2.jpg';
 if(document.getElementById('homesGrid')) renderProperties();
+</script><script>
+/* Use the white Secondary Nest lockup in the Company Profile hero. */
+if(new URLSearchParams(location.search).get('company')==='1'){
+  const companyHero=document.querySelector('main > section:first-child');
+  const companyLogo=companyHero?.querySelector('img');
+  const companyTitle=companyHero?.querySelector('h1');
+  if(companyLogo&&companyTitle){
+    companyLogo.src='assets/secondary-nest-white.png';
+    companyLogo.alt='Good Nest — Secondary Hospitality';
+    companyLogo.style.filter='none';
+    companyLogo.style.width='auto';
+    companyLogo.style.maxWidth='min(100%, 250px)';
+    companyLogo.style.objectFit='contain';
+    requestAnimationFrame(()=>{companyLogo.style.height=companyTitle.getBoundingClientRect().height+'px'});
+  }
+}
 </script></body></html>
