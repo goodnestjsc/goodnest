@@ -87,13 +87,13 @@ if(new URLSearchParams(location.search).get('company')==='1'){
   const companyLogo=companyHero?.querySelector('img');
   const companyTitle=companyHero?.querySelector('h1');
   if(companyLogo&&companyTitle){
-    companyLogo.src='assets/secondary-nest-white.png';
-    companyLogo.alt='Good Nest — Secondary Hospitality';
+    companyLogo.src='assets/architectural-nest-white.png';
+    companyLogo.alt='Good Nest — Architectural Nest';
     companyLogo.style.filter='none';
     companyLogo.style.width='auto';
-    companyLogo.style.maxWidth='min(100%, 250px)';
+    companyLogo.style.maxWidth='500px';
     companyLogo.style.objectFit='contain';
-    requestAnimationFrame(()=>{companyLogo.style.height=companyTitle.getBoundingClientRect().height+'px'});
+    requestAnimationFrame(()=>{companyLogo.style.height=(companyTitle.getBoundingClientRect().height*2.88)+'px'});
   }
 }
 </script></body></html>
