@@ -42,12 +42,18 @@ document.getElementById('leaders')?.remove();if(!showCompanyV2()&&!showUtilityPa
 const goodnestSetLang=setLang;
 setLang=function(language){
   goodnestSetLang(language);
+  try{localStorage.setItem('goodnest-language',language)}catch(e){}
   const extra={vi:{company:'Công ty',any:'Bất kỳ'},en:{company:'Company',any:'Any'},ja:{company:'会社情報',any:'指定なし'}}[language];
   const companyLink=document.querySelector('a[href="?company=1"]');
   const anyGuestOption=document.querySelector('#guests option[value=""]');
   if(companyLink) companyLink.textContent=extra.company;
   if(anyGuestOption) anyGuestOption.textContent=extra.any;
 };
+if(document.getElementById('homesGrid')){
+  let initialLanguage='ja';
+  try{initialLanguage=localStorage.getItem('goodnest-language')||'ja'}catch(e){}
+  setLang(initialLanguage);
+}
 document.querySelectorAll('.footer img[src="assets/goodnest-logo.png"]').forEach(logo=>{
   logo.style.height='40px';
   logo.style.filter='brightness(0) invert(1)';
