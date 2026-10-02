@@ -1,4 +1,5 @@
 (function(){
+  const privateCards={director:'e3fc2cbabd314db0919d924094d047fc',deputy:'9094568d601f47dbb1972c1bd6ee6304'};
   const text={
     vi:{stays:'Nhà nghỉ',availability:'Lịch phòng',company:'Công ty',contact:'Liên hệ',phone:'Gọi Goodnest',subhead:'10 không gian lưu trú được chăm chút tại Tokyo, để bạn cảm thấy như đang ở nhà.',calendar:'Kiểm tra lịch phòng.',calendarLead:'Chọn căn nhà, gửi ngày ở và số khách. Goodnest sẽ xác nhận lịch trống mới nhất.',available:'Các căn đang mở',check:'Kiểm tra lịch',view:'Xem căn nhà',contactTitle:'Cùng lên kế hoạch<br>cho chuyến ở của bạn.',contactLead:'Khi đặt trực tiếp, vui lòng ghi tên căn, ngày ở và số khách.',office:'Văn phòng'},
     en:{stays:'Stays',availability:'Availability',company:'Company',contact:'Contact',phone:'Call Goodnest',subhead:'Ten considered stays across Tokyo, made to feel like home.',calendar:'Check your stay.',calendarLead:'Choose a property, then send your dates and guest count. Goodnest will confirm the latest availability.',available:'Available homes',check:'Check availability',view:'View home',contactTitle:'Let’s plan<br>your stay.',contactLead:'For direct reservations, please include the property name, dates and guest count.',office:'Office'},
@@ -32,7 +33,7 @@
     const dd=info.querySelectorAll('dd');dd[3].innerHTML=tr.business;dd[4].textContent=tr.start;dd[5].textContent=tr.incorporation;dd[7].textContent=tr.capital;
     bank.querySelector('.eyebrow').textContent=tr.banks;bank.querySelector('h2').textContent=tr.bankTitle;
     leaders.querySelector('.eyebrow').textContent=tr.leaders;leaders.querySelector('h2').textContent=tr.leaderTitle;
-    const cards=leaders.querySelectorAll('.leader');cards[0].querySelector('small').textContent=tr.rep;cards[0].querySelector('h3').textContent='Tran Anh Khoa';cards[0].querySelector('.profile-link').textContent=tr.card;cards[1].querySelector('small').textContent=tr.deputy;cards[1].querySelector('h3').textContent='Dang Nguyen Vy Thao';cards[1].querySelector('.profile-link').textContent=tr.card;
+    leaders.remove();
   }
   function updateDirectorProfile(){
     if(new URLSearchParams(location.search).get('profile')!=='director')return;
@@ -47,11 +48,18 @@
     main.querySelector('h1').textContent='Dang Nguyen Vy Thao';
     main.querySelector('p').textContent='Deputy Representative · Good Nest Co., Ltd.';
   }
+  function refreshProfileQr(){
+    const profile=new URLSearchParams(location.search).get('profile'),token=privateCards[profile];if(!token)return;
+    const images=document.querySelectorAll('.contact-card main img');if(images.length<2)return;
+    const cardUrl=location.origin+location.pathname+'?profile='+profile+'&card='+token;
+    images[1].src='https://api.qrserver.com/v1/create-qr-code/?size=220x220&data='+encodeURIComponent(cardUrl);
+    images[1].alt='Private QR code for this Goodnest contact card';
+  }
   if(document.getElementById('homesGrid')){
     copy.vi.subhead=text.vi.subhead;copy.en.subhead=text.en.subhead;copy.ja.subhead=text.ja.subhead;
     const image=document.createElement('figure');image.className='hero-visual';image.innerHTML='<img src="assets/tokyo-tower-hero.png" alt="Tokyo Tower at sunset">';document.querySelector('#top .wrap').appendChild(image);
     setLang(saved);document.querySelectorAll('a[href="tel:+818033216457"]').forEach(a=>a.textContent=text[saved].phone);document.querySelector('.footer .footer-grid > div:last-child')?.remove();
     const original=renderProperties;renderProperties=function(){original();const cards=[...document.querySelectorAll('#homesGrid .home')];cards.forEach((card,i)=>card.querySelector('.num').textContent=String(i+1).padStart(2,'0')+' · '+card.querySelector('.num').textContent.split(' · ')[1])};renderProperties();
-  }else{document.body.insertAdjacentHTML('afterbegin',header(saved));utilities(saved);localizeCompany(saved);updateDirectorProfile();updateDeputyProfile();document.querySelectorAll('.back-link').forEach(x=>x.remove())}
+  }else{const requestedProfile=new URLSearchParams(location.search).get('profile');if(requestedProfile&&privateCards[requestedProfile]!==new URLSearchParams(location.search).get('card')){document.body.innerHTML='<main style="min-height:100vh;display:grid;place-items:center;padding:40px;text-align:center"><div><h1 style="font:400 2.5rem Georgia,serif">Profile unavailable</h1><p>This contact card is available only through its private QR link.</p><a href="./">Return to Goodnest</a></div></main>'}else{document.body.insertAdjacentHTML('afterbegin',header(saved));utilities(saved);localizeCompany(saved);updateDirectorProfile();updateDeputyProfile();refreshProfileQr();document.querySelectorAll('.back-link,.contact-card .back').forEach(x=>x.remove())}}
   if(new URLSearchParams(location.search).get('home')==='16'&&bamboo&&!document.querySelector('.gallery-title .actions a[href*="booking.com"]')){document.querySelector('.gallery-title .actions')?.insertAdjacentHTML('beforeend',`<a target="_blank" rel="noopener" href="${bamboo[5]}">Booking.com</a>`)}
 })();
