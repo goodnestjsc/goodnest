@@ -35,6 +35,20 @@
     leaders.querySelector('.eyebrow').textContent=tr.leaders;leaders.querySelector('h2').textContent=tr.leaderTitle;
     leaders.remove();
   }
+  function refreshCompanyHero(){
+    if(new URLSearchParams(location.search).get('company')!=='1')return;
+    const hero=document.querySelector('main > section:first-child .wrap');
+    const grid=hero?.querySelector('div[style*="display:grid"]');if(!grid||grid.dataset.refreshed)return;
+    const logo=grid.querySelector('img'),info=grid.querySelector(':scope > div');if(!logo||!info)return;
+    const lockup=document.createElement('div');lockup.className='company-lockup';
+    logo.style.height='160px';logo.style.width='160px';logo.style.maxWidth='160px';logo.style.objectFit='contain';
+    info.querySelector('.eyebrow')?.remove();
+    info.querySelector('h1').style.fontSize='clamp(2.2rem,4vw,3.65rem)';info.querySelector('h1').style.lineHeight='.96';
+    lockup.append(logo,info);
+    const visual=document.createElement('figure');visual.className='company-city-visual';visual.innerHTML='<img src="assets/tokyo-skytree-company.png" alt="Tokyo street at sunset with Tokyo Skytree">';
+    grid.className='company-hero-grid';grid.style.cssText='';grid.dataset.refreshed='true';grid.append(lockup,visual);
+    const companyStyle=document.createElement('style');companyStyle.textContent=`main > section:first-child:has(.company-hero-grid){padding:18px 0 28px!important}.company-hero-grid{display:grid!important;grid-template-columns:minmax(260px,.72fr) minmax(390px,1.28fr);gap:42px;align-items:center;margin-top:0}.company-lockup{display:grid;gap:8px;align-content:center}.company-lockup h1{margin:0!important}.company-lockup p{font-size:1rem!important}.company-city-visual{height:290px;margin:0;overflow:hidden;border-radius:90px 0 0 0;box-shadow:14px 14px 0 #c9815d}.company-city-visual img{width:100%;height:100%;object-fit:cover;display:block}@media(max-width:800px){.company-hero-grid{grid-template-columns:1fr}.company-city-visual{height:240px;border-radius:60px 0 0 0}}`;document.head.appendChild(companyStyle);
+  }
   function updateDirectorProfile(){
     if(new URLSearchParams(location.search).get('profile')!=='director')return;
     const main=document.querySelector('.contact-card main'),buttons=main?.querySelector('.buttons');if(!main||!buttons)return;
@@ -60,6 +74,6 @@
     const image=document.createElement('figure');image.className='hero-visual';image.innerHTML='<img src="assets/tokyo-tower-hero.png" alt="Tokyo Tower at sunset">';document.querySelector('#top .wrap').appendChild(image);
     setLang(saved);document.querySelectorAll('a[href="tel:+818033216457"]').forEach(a=>a.textContent=text[saved].phone);document.querySelector('.footer .footer-grid > div:last-child')?.remove();
     const original=renderProperties;renderProperties=function(){original();const cards=[...document.querySelectorAll('#homesGrid .home')];cards.forEach((card,i)=>card.querySelector('.num').textContent=String(i+1).padStart(2,'0')+' · '+card.querySelector('.num').textContent.split(' · ')[1])};renderProperties();
-  }else{const requestedProfile=new URLSearchParams(location.search).get('profile');if(requestedProfile&&privateCards[requestedProfile]!==new URLSearchParams(location.search).get('card')){document.body.innerHTML='<main style="min-height:100vh;display:grid;place-items:center;padding:40px;text-align:center"><div><h1 style="font:400 2.5rem Georgia,serif">Profile unavailable</h1><p>This contact card is available only through its private QR link.</p><a href="./">Return to Goodnest</a></div></main>'}else{document.body.insertAdjacentHTML('afterbegin',header(saved));utilities(saved);localizeCompany(saved);updateDirectorProfile();updateDeputyProfile();refreshProfileQr();document.querySelectorAll('.back-link,.contact-card .back').forEach(x=>x.remove())}}
+  }else{const requestedProfile=new URLSearchParams(location.search).get('profile');if(requestedProfile&&privateCards[requestedProfile]!==new URLSearchParams(location.search).get('card')){document.body.innerHTML='<main style="min-height:100vh;display:grid;place-items:center;padding:40px;text-align:center"><div><h1 style="font:400 2.5rem Georgia,serif">Profile unavailable</h1><p>This contact card is available only through its private QR link.</p><a href="./">Return to Goodnest</a></div></main>'}else{document.body.insertAdjacentHTML('afterbegin',header(saved));utilities(saved);localizeCompany(saved);refreshCompanyHero();updateDirectorProfile();updateDeputyProfile();refreshProfileQr();document.querySelectorAll('.back-link,.contact-card .back').forEach(x=>x.remove())}}
   if(new URLSearchParams(location.search).get('home')==='16'&&bamboo&&!document.querySelector('.gallery-title .actions a[href*="booking.com"]')){document.querySelector('.gallery-title .actions')?.insertAdjacentHTML('beforeend',`<a target="_blank" rel="noopener" href="${bamboo[5]}">Booking.com</a>`)}
 })();
